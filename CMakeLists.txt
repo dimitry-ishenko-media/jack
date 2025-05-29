@@ -17,12 +17,14 @@ target_link_libraries(PkgConfig::JACK INTERFACE ${JACK_SERVER_LINK_LIBRARIES})
 set(HEADERS
     src/error.hpp
     src/param.hpp
+    src/server.hpp
 )
 set(OVERALL_HEADER src/jack++.hpp)
 
 set(SOURCES
     src/error.cpp
     src/param.cpp
+    src/server.cpp
 )
 
 include(GNUInstallDirs)

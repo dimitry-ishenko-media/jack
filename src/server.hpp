@@ -1,0 +1,58 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2025 Dimitry Ishenko
+// Contact: dimitry (dot) ishenko (at) (gee) mail (dot) com
+//
+// Distributed under the GNU GPL license. See the LICENSE.md file for details.
+
+////////////////////////////////////////////////////////////////////////////////
+#ifndef JACK_SERVER_HPP
+#define JACK_SERVER_HPP
+
+////////////////////////////////////////////////////////////////////////////////
+#include "param.hpp"
+
+#include <optional>
+#include <string>
+
+struct jackctl_server;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace jack
+{
+
+////////////////////////////////////////////////////////////////////////////////
+struct server_options
+{
+    std::optional<bool> realtime;
+    std::optional<int> priority;
+};
+
+class server
+{
+public:
+    ////////////////////
+    explicit server(const std::string& name, const server_options& = { });
+    ~server();
+
+    server(const server&) = delete;
+    server(server&&);
+
+    server& operator=(const server&) = delete;
+    server& operator=(server&&);
+
+    ////////////////////
+    std::string name() const;
+    bool realtime() const;
+    std::optional<int> priority() const;
+
+private:
+    ////////////////////
+    jackctl_server* server_;
+    params params_;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#endif
