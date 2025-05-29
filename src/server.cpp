@@ -20,13 +20,7 @@ server::server(const std::string& name, const server_options& options) :
 {
     if (!server_) throw jack::error{EINVAL, "jackctl_server_create()"};
 
-    for (auto params = jackctl_server_get_parameters(server_); params; params = params->next)
-    {
-        auto param = static_cast<jackctl_parameter*>(params->data);
-        std::string name = jackctl_parameter_get_name(param);
-
-        params_.emplace(std::move(name), param);
-    }
+    params_ = extract_from(jackctl_server_get_parameters(server_));
 
     find(params_, "name").value(name);
     if (options.realtime) find(params_, "realtime").value(*options.realtime);

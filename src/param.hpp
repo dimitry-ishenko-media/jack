@@ -14,6 +14,8 @@
 #include <variant>
 
 struct jackctl_parameter;
+struct _JSList;
+using jack_list = _JSList;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace jack
@@ -48,6 +50,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 using params = std::map<std::string, param>;
+
+params extract_from(const jack_list*);
 
 param& find(params&, const std::string& name);
 const param& find(const params&, const std::string& name);

@@ -61,6 +61,22 @@ jack::value param::value() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+params extract_from(const jack_list* node)
+{
+    jack::params params;
+
+    for (; node; node = node->next)
+    {
+        auto param = static_cast<jackctl_parameter*>(node->data);
+        std::string name = jackctl_parameter_get_name(param);
+
+        params.emplace(std::move(name), param);
+    }
+
+    return params;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 param& find(jack::params& params, const std::string& name)
 {
     auto it = params.find(name);
