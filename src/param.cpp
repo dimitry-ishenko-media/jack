@@ -32,7 +32,7 @@ void param::value(const jack::value& val)
         case JackParamString:
         {
             auto s = std::get<std::string>(val).substr(0, sizeof value.str - 1);
-            std::copy(s.begin(), s.end(), value.str);
+            std::copy(s.begin(), s.end() + 1, value.str);
             break;
         }
         case JackParamBool: value.b = std::get<bool>(val); break;
