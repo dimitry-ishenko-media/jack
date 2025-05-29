@@ -1,0 +1,77 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2025 Dimitry Ishenko
+// Contact: dimitry (dot) ishenko (at) (gee) mail (dot) com
+//
+// Distributed under the GNU GPL license. See the LICENSE.md file for details.
+
+////////////////////////////////////////////////////////////////////////////////
+#include "error.hpp"
+#include "param.hpp"
+
+#include <algorithm> // std::copy
+#include <cerrno>
+#include <jack/control.h>
+
+////////////////////////////////////////////////////////////////////////////////
+namespace jack
+{
+
+////////////////////////////////////////////////////////////////////////////////
+param::param(jackctl_parameter* p) : param_{p} { }
+
+////////////////////////////////////////////////////////////////////////////////
+void param::value(const jack::value& val)
+{
+    auto type = jackctl_parameter_get_type(param_);
+    jackctl_parameter_value value;
+    switch (type)
+    {
+        case JackParamInt: value.i = std::get<int>(val); break;
+        case JackParamUInt: value.ui = std::get<unsigned>(val); break;
+        case JackParamChar: value.c = std::get<char>(val); break;
+        case JackParamString:
+        {
+            auto s = std::get<std::string>(val).substr(0, sizeof value.str - 1);
+            std::copy(s.begin(), s.end(), value.str);
+            break;
+        }
+        case JackParamBool: value.b = std::get<bool>(val); break;
+        default: throw jack::error{EINVAL, "jackctl_parameter_get_type()"};
+    }
+
+    auto success = jackctl_parameter_set_value(param_, &value);
+    if (!success) throw jack::error{EINVAL, "jackctl_parameter_set_value()"}; 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+jack::value param::value() const
+{
+    auto value = jackctl_parameter_get_value(param_);
+    auto type = jackctl_parameter_get_type(param_);
+
+    switch (type)
+    {
+        case JackParamInt: return value.i;
+        case JackParamUInt: return value.ui;
+        case JackParamChar: return value.c;
+        case JackParamString: return value.str;
+        case JackParamBool: return value.b;
+        default: throw jack::error{EINVAL, "jackctl_parameter_get_type()"};
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+param& find(jack::params& params, const std::string& name)
+{
+    auto it = params.find(name);
+    return it != params.end() ? it->second : throw jack::error{EINVAL, name};
+}
+
+const param& find(const jack::params& params, const std::string& name)
+{
+    auto it = params.find(name);
+    return it != params.end() ? it->second : throw jack::error{EINVAL, name};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+}
