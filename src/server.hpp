@@ -9,6 +9,7 @@
 #define JACK_SERVER_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
+#include "driver.hpp"
 #include "param.hpp"
 
 #include <optional>
@@ -31,7 +32,7 @@ class server
 {
 public:
     ////////////////////
-    explicit server(const std::string& name, const server_options& = { });
+    server(const std::string& name, const driver&, const server_options& = { });
     ~server();
 
     server(const server&) = delete;

@@ -15,7 +15,7 @@ namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-server::server(const std::string& name, const server_options& options) :
+server::server(const std::string& name, const jack::driver& driver, const server_options& options) :
     server_{jackctl_server_create(nullptr, nullptr)}
 {
     if (!server_) throw jack::error{EINVAL, "jackctl_server_create()"};
@@ -26,9 +26,10 @@ server::server(const std::string& name, const server_options& options) :
     if (options.realtime) find(params_, "realtime").value(*options.realtime);
     if (options.priority) find(params_, "realtime-priority").value(*options.priority);
 
-    // TODO: set up driver
+    jackctl_driver* driver_;
+    driver.setup(server_, &driver_);
 
-    auto success = jackctl_server_open(server_, nullptr);
+    auto success = jackctl_server_open(server_, driver_);
     if (!success) throw jack::error{EINVAL, "jackctl_server_open()"};
 
     success = jackctl_server_start(server_);
