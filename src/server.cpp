@@ -21,7 +21,7 @@ namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-server::server(const std::string& name, const jack::driver& driver, const server_options& options) :
+server::server(const std::string& name, jack::driver&& driver, const server_options& options) :
     server_{jackctl_server_create(nullptr, nullptr)}
 {
     if (!server_) throw jack::error{EACCES, "jackctl_server_create()"};

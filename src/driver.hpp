@@ -27,6 +27,8 @@ class driver
 {
 public:
     ////////////////////
+    driver() = default;
+
     driver(const driver&) = delete;
     driver(driver&&) = default;
 
@@ -37,13 +39,11 @@ protected:
     ////////////////////
     std::string name_;
     std::map<std::string, value> options_;
+    params params_;
 
-    mutable params params_;
-
+private:
     ////////////////////
-    driver() = default;
-    void setup(jackctl_server*, jackctl_driver**) const;
-
+    void setup(jackctl_server*, jackctl_driver**);
     friend class server;
 };
 

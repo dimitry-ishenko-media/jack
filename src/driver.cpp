@@ -15,7 +15,7 @@ namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-void driver::setup(jackctl_server* server, jackctl_driver** driver) const
+void driver::setup(jackctl_server* server, jackctl_driver** driver)
 {
     for (auto node = jackctl_server_get_drivers_list(server); node; node = node->next)
     {

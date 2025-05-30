@@ -34,7 +34,10 @@ class server
 {
 public:
     ////////////////////
-    server(const std::string& name, const driver&, const server_options& = { });
+    server(const std::string& name, jack::driver& driver, const server_options& options = { }) :
+        server{name, std::move(driver), options}
+    { }
+    server(const std::string& name, driver&&, const server_options& = { });
     ~server();
 
     ////////////////////
