@@ -32,17 +32,14 @@ class port
 {
 public:
     ////////////////////
-    port(jack_client*, const std::string& name, jack::dir);
-
-    ////////////////////
     std::string name() const;
-
-    bool is_input() const;
-    bool is_output() const;
-
     bool is_physical() const;
 
     jack::buffer buffer(std::size_t) const;
+
+protected:
+    ////////////////////
+    port(jack_client*, const std::string& name, jack::dir);
 
 private:
     ////////////////////
@@ -50,7 +47,22 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-using ports = std::vector<port>;
+class input_port : public port
+{
+public:
+    ////////////////////
+    input_port(jack_client* client, const std::string& name) : port{client, name, jack::in} { }
+};
+
+class output_port : public port
+{
+public:
+    ////////////////////
+    output_port(jack_client* client, const std::string& name) : port{client, name, jack::out} { }
+};
+
+using input_ports = std::vector<input_port>;
+using output_ports = std::vector<output_port>;
 
 ////////////////////////////////////////////////////////////////////////////////
 }

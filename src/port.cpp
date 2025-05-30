@@ -20,9 +20,7 @@ namespace
 
 auto jack_port_register_helper(jack_client* client, const std::string& name, jack::dir dir)
 {
-    int flags = 0;
-    if (dir & jack::in) flags |= JackPortIsInput;
-    if (dir & jack::out) flags |= JackPortIsOutput;
+    int flags = (dir == jack::in) ? JackPortIsInput : JackPortIsOutput;
     return jack_port_register(client, name.data(), JACK_DEFAULT_AUDIO_TYPE, flags, 0);
 }
 
@@ -42,10 +40,6 @@ port::port(jack_client* client, const std::string& name, jack::dir dir) :
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string port::name() const { return jack_port_name(&*port_); }
-
-bool port::is_input() const { return jack_port_flags(&*port_) & JackPortIsInput; }
-bool port::is_output() const { return jack_port_flags(&*port_) & JackPortIsOutput; }
-
 bool port::is_physical() const { return jack_port_flags(&*port_) & JackPortIsPhysical; }
 
 jack::buffer port::buffer(std::size_t size) const
