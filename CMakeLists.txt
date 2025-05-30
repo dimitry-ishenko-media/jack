@@ -19,7 +19,9 @@ set(HEADERS
     src/driver.hpp
     src/error.hpp
     src/param.hpp
+    src/port.hpp
     src/server.hpp
+    src/types.hpp
 )
 set(OVERALL_HEADER src/jack++.hpp)
 
@@ -28,6 +30,7 @@ set(SOURCES
     src/driver.cpp
     src/error.cpp
     src/param.cpp
+    src/port.cpp
     src/server.cpp
 )
 

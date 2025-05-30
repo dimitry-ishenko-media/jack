@@ -1,0 +1,33 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2025 Dimitry Ishenko
+// Contact: dimitry (dot) ishenko (at) (gee) mail (dot) com
+//
+// Distributed under the GNU GPL license. See the LICENSE.md file for details.
+
+////////////////////////////////////////////////////////////////////////////////
+#ifndef JACK_TYPES_HPP
+#define JACK_TYPES_HPP
+
+////////////////////////////////////////////////////////////////////////////////
+#include <span>
+
+////////////////////////////////////////////////////////////////////////////////
+namespace jack
+{
+
+enum dir { in = 0x01, out = 0x02 };
+
+constexpr dir operator|(dir x, dir y) { return static_cast<dir>(static_cast<int>(x) | static_cast<int>(y)); }
+constexpr dir operator&(dir x, dir y) { return static_cast<dir>(static_cast<int>(x) & static_cast<int>(y)); }
+
+struct physical_t { explicit physical_t() = default; };
+inline constexpr physical_t physical { };
+
+using sample = float;
+using buffer = std::span<sample>;
+
+////////////////////////////////////////////////////////////////////////////////
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#endif

@@ -9,4 +9,6 @@
 #include <jack++/driver.hpp>
 #include <jack++/error.hpp>
 #include <jack++/param.hpp>
+#include <jack++/port.hpp>
 #include <jack++/server.hpp>
+#include <jack++/types.hpp>
