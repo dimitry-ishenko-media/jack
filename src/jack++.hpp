@@ -5,6 +5,7 @@
 // Distributed under the GNU GPL license. See the LICENSE.md file for details.
 
 ////////////////////////////////////////////////////////////////////////////////
+#include <jack++/client.hpp>
 #include <jack++/driver.hpp>
 #include <jack++/error.hpp>
 #include <jack++/param.hpp>

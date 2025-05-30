@@ -15,6 +15,7 @@ pkg_get_variable(JACK_SERVER_LINK_LIBRARIES jack server_libs)
 target_link_libraries(PkgConfig::JACK INTERFACE ${JACK_SERVER_LINK_LIBRARIES})
 
 set(HEADERS
+    src/client.hpp
     src/driver.hpp
     src/error.hpp
     src/param.hpp
@@ -23,6 +24,7 @@ set(HEADERS
 set(OVERALL_HEADER src/jack++.hpp)
 
 set(SOURCES
+    src/client.cpp
     src/driver.cpp
     src/error.cpp
     src/param.cpp

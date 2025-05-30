@@ -1,0 +1,61 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2025 Dimitry Ishenko
+// Contact: dimitry (dot) ishenko (at) (gee) mail (dot) com
+//
+// Distributed under the GNU GPL license. See the LICENSE.md file for details.
+
+////////////////////////////////////////////////////////////////////////////////
+#ifndef JACK_CLIENT_HPP
+#define JACK_CLIENT_HPP
+
+////////////////////////////////////////////////////////////////////////////////
+#include <atomic>
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <optional>
+#include <string>
+
+struct _jack_client;
+using jack_client = _jack_client;
+struct jack_client_delete { void operator()(jack_client*); };
+
+////////////////////////////////////////////////////////////////////////////////
+namespace jack
+{
+
+////////////////////////////////////////////////////////////////////////////////
+using process_callback = std::function<void(/*TODO: ports*/ std::size_t)>;
+
+////////////////////////////////////////////////////////////////////////////////
+struct client_options
+{
+    std::optional<std::string> server_name;
+};
+
+class client
+{
+public:
+    ////////////////////
+    explicit client(const std::string& name, const client_options& = { });
+    ~client();
+
+    ////////////////////
+    std::string name() const;
+
+    void on_data(process_callback);
+
+private:
+    ////////////////////
+    std::unique_ptr<jack_client, jack_client_delete> client_;
+    // use shared_ptr to allow atomic store/load
+    std::atomic<std::shared_ptr<process_callback>> callback_;
+
+    static int dispatch_process_callback(unsigned, void*);
+};
+
+////////////////////////////////////////////////////////////////////////////////
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#endif
