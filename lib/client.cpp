@@ -5,8 +5,8 @@
 // Distributed under the GNU GPL license. See the LICENSE.md file for details.
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "client.hpp"
-#include "error.hpp"
+#include "jack++/client.hpp"
+#include "jack++/error.hpp"
 
 #include <jack/jack.h>
 

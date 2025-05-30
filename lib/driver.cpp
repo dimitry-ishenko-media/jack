@@ -5,8 +5,8 @@
 // Distributed under the GNU GPL license. See the LICENSE.md file for details.
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "driver.hpp"
-#include "error.hpp"
+#include "jack++/driver.hpp"
+#include "jack++/error.hpp"
 
 #include <jack/control.h>
 

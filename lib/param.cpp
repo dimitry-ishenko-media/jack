@@ -5,8 +5,8 @@
 // Distributed under the GNU GPL license. See the LICENSE.md file for details.
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "error.hpp"
-#include "param.hpp"
+#include "jack++/error.hpp"
+#include "jack++/param.hpp"
 
 #include <algorithm> // std::copy
 #include <cerrno>
