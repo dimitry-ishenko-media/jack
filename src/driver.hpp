@@ -27,8 +27,6 @@ class driver
 {
 public:
     ////////////////////
-    driver() = default;
-
     driver(const driver&) = delete;
     driver(driver&&) = default;
 
@@ -42,6 +40,8 @@ protected:
     std::string name_;
     std::map<std::string, value> options_;
     params params_;
+
+    explicit driver(std::string name) : name_{std::move(name)} { }
 
 private:
     ////////////////////

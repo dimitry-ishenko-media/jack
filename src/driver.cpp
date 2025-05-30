@@ -23,7 +23,11 @@ void driver::setup(jackctl_server* server, jackctl_driver** driver)
         if (name_ == jackctl_driver_get_name(*driver))
         {
             params_ = extract_from(jackctl_driver_get_parameters(*driver));
-            for (auto&& [name, value] : options_) find(params_, name).set(value);
+            while (options_.size())
+            {
+                auto node = options_.extract(options_.begin());
+                find(params_, node.key()).set(node.mapped());
+            }
             return;
         }
     }
@@ -31,9 +35,8 @@ void driver::setup(jackctl_server* server, jackctl_driver** driver)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-alsa_driver::alsa_driver(const alsa_options& options)
+alsa_driver::alsa_driver(const alsa_options& options) : driver{"alsa"}
 {
-    name_ = "alsa";
     if (options.device) options_.emplace("device", *options.device);
     if (options.chan_in) options_.emplace("inchannels", *options.chan_in);
     if (options.chan_out) options_.emplace("outchannels", *options.chan_out);
