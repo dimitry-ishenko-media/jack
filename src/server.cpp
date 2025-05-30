@@ -11,18 +11,12 @@
 #include <jack/control.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-void jackctl_server_delete::operator()(jackctl_server* server)
-{
-    jackctl_server_destroy(server);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
 server::server(const std::string& name, jack::driver&& driver, const server_options& options) :
-    server_{jackctl_server_create(nullptr, nullptr)}
+    server_{ jackctl_server_create(nullptr, nullptr), &jackctl_server_destroy }
 {
     if (!server_) throw jack::error{EACCES, "jackctl_server_create()"};
 

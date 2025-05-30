@@ -17,7 +17,6 @@
 #include <string>
 
 struct jackctl_server;
-struct jackctl_server_delete { void operator()(jackctl_server*); };
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace jack
@@ -49,7 +48,7 @@ public:
 
 private:
     ////////////////////
-    std::unique_ptr<jackctl_server, jackctl_server_delete> server_;
+    std::unique_ptr<jackctl_server, void(*)(jackctl_server*)> server_;
     params params_;
 };
 
