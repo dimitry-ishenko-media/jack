@@ -35,6 +35,8 @@ public:
     driver& operator=(const driver&) = delete;
     driver& operator=(driver&&) = default;
 
+    auto&& name() const { return name_; }
+
 protected:
     ////////////////////
     std::string name_;
