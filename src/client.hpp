@@ -18,7 +18,6 @@
 
 struct _jack_client;
 using jack_client = _jack_client;
-struct jack_client_delete { void operator()(jack_client*); };
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace jack
@@ -47,7 +46,8 @@ public:
 
 private:
     ////////////////////
-    std::unique_ptr<jack_client, jack_client_delete> client_;
+    std::unique_ptr<jack_client, int(*)(jack_client*)> client_;
+
     // use shared_ptr to allow atomic store/load
     std::atomic<std::shared_ptr<process_callback>> callback_;
 

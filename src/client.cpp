@@ -11,17 +11,14 @@
 #include <jack/jack.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-void jack_client_delete::operator()(jack_client* client)
-{
-    jack_client_close(client);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-client::client(const std::string& name, const client_options& options)
+namespace
+{
+
+auto jack_client_open_helper(const std::string& name, const client_options& options)
 {
     int flags = JackNoStartServer;
     const char* server_name = nullptr;
@@ -32,7 +29,15 @@ client::client(const std::string& name, const client_options& options)
     }
 
     jack_status_t status;
-    client_.reset(jack_client_open(name.data(), static_cast<jack_options_t>(flags), &status, server_name));
+    return jack_client_open(name.data(), static_cast<jack_options_t>(flags), &status, server_name);
+}
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+client::client(const std::string& name, const client_options& options) :
+    client_{ jack_client_open_helper(name, options), &jack_client_close }
+{
     if (!client_) throw jack::error{EACCES, "jack_client_open()"};
 
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
