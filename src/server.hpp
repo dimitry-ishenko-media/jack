@@ -12,10 +12,12 @@
 #include "driver.hpp"
 #include "param.hpp"
 
+#include <memory>
 #include <optional>
 #include <string>
 
 struct jackctl_server;
+struct jackctl_server_delete { void operator()(jackctl_server*); };
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace jack
@@ -35,12 +37,6 @@ public:
     server(const std::string& name, const driver&, const server_options& = { });
     ~server();
 
-    server(const server&) = delete;
-    server(server&&);
-
-    server& operator=(const server&) = delete;
-    server& operator=(server&&);
-
     ////////////////////
     std::string name() const;
     bool realtime() const;
@@ -48,7 +44,7 @@ public:
 
 private:
     ////////////////////
-    jackctl_server* server_;
+    std::unique_ptr<jackctl_server, jackctl_server_delete> server_;
     params params_;
 };
 
