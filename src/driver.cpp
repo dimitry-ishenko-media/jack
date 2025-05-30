@@ -23,7 +23,7 @@ void driver::setup(jackctl_server* server, jackctl_driver** driver)
         if (name_ == jackctl_driver_get_name(*driver))
         {
             params_ = extract_from(jackctl_driver_get_parameters(*driver));
-            for (auto&& [name, value] : options_) find(params_, name).value(value);
+            for (auto&& [name, value] : options_) find(params_, name).set(value);
             return;
         }
     }
@@ -43,12 +43,12 @@ alsa_driver::alsa_driver(const alsa_options& options)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string alsa_driver::device() const { return find(params_, "device").get<std::string>(); }
-unsigned alsa_driver::chan_in() const { return find(params_, "inchannels").get<unsigned>(); }
-unsigned alsa_driver::chan_out() const { return find(params_, "outchannels").get<unsigned>(); }
-unsigned alsa_driver::rate() const { return find(params_, "rate").get<unsigned>(); }
-unsigned alsa_driver::period() const { return find(params_, "period").get<unsigned>(); }
-unsigned alsa_driver::periods() const { return find(params_, "nperiods").get<unsigned>(); }
+std::string alsa_driver::device() const { return find(params_, "device").get_as<std::string>(); }
+unsigned alsa_driver::chan_in() const { return find(params_, "inchannels").get_as<unsigned>(); }
+unsigned alsa_driver::chan_out() const { return find(params_, "outchannels").get_as<unsigned>(); }
+unsigned alsa_driver::rate() const { return find(params_, "rate").get_as<unsigned>(); }
+unsigned alsa_driver::period() const { return find(params_, "period").get_as<unsigned>(); }
+unsigned alsa_driver::periods() const { return find(params_, "nperiods").get_as<unsigned>(); }
 
 ////////////////////////////////////////////////////////////////////////////////
 }

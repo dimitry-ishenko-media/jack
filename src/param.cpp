@@ -20,7 +20,7 @@ namespace jack
 param::param(jackctl_parameter* p) : param_{p} { }
 
 ////////////////////////////////////////////////////////////////////////////////
-void param::value(const jack::value& val)
+void param::set(const jack::value& val)
 {
     auto type = jackctl_parameter_get_type(param_);
     jackctl_parameter_value value;
@@ -44,7 +44,7 @@ void param::value(const jack::value& val)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-jack::value param::value() const
+jack::value param::get() const
 {
     auto value = jackctl_parameter_get_value(param_);
     auto type = jackctl_parameter_get_type(param_);

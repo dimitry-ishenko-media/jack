@@ -37,11 +37,11 @@ public:
     ////////////////////
     explicit param(jackctl_parameter*);
 
-    void value(const jack::value&);
-    jack::value value() const;
+    void set(const jack::value&);
+    jack::value get() const;
 
     template<typename T>
-    auto get() const { return std::get<T>(value()); }
+    auto get_as() const { return std::get<T>(get()); }
 
 private:
     ////////////////////
