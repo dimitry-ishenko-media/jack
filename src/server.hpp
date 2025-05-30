@@ -42,6 +42,8 @@ public:
     bool realtime() const;
     std::optional<int> priority() const;
 
+    void wait_for_signal();
+
 private:
     ////////////////////
     std::unique_ptr<jackctl_server, jackctl_server_delete> server_;
