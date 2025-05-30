@@ -18,22 +18,30 @@ namespace jack
 server::server(const std::string& name, const jack::driver& driver, const server_options& options) :
     server_{jackctl_server_create(nullptr, nullptr)}
 {
-    if (!server_) throw jack::error{EINVAL, "jackctl_server_create()"};
+    if (!server_) throw jack::error{EACCES, "jackctl_server_create()"};
 
-    params_ = extract_from(jackctl_server_get_parameters(server_));
+    try
+    {
+        params_ = extract_from(jackctl_server_get_parameters(server_));
 
-    find(params_, "name").value(name);
-    if (options.realtime) find(params_, "realtime").value(*options.realtime);
-    if (options.priority) find(params_, "realtime-priority").value(*options.priority);
+        find(params_, "name").value(name);
+        if (options.realtime) find(params_, "realtime").value(*options.realtime);
+        if (options.priority) find(params_, "realtime-priority").value(*options.priority);
 
-    jackctl_driver* driver_;
-    driver.setup(server_, &driver_);
+        jackctl_driver* driver_;
+        driver.setup(server_, &driver_);
 
-    auto success = jackctl_server_open(server_, driver_);
-    if (!success) throw jack::error{EINVAL, "jackctl_server_open()"};
+        auto success = jackctl_server_open(server_, driver_);
+        if (!success) throw jack::error{EACCES, "jackctl_server_open()"};
 
-    success = jackctl_server_start(server_);
-    if (!success) throw jack::error{EINVAL, "jackctl_server_start()"};
+        success = jackctl_server_start(server_);
+        if (!success) throw jack::error{EACCES, "jackctl_server_start()"};
+    }
+    catch (...)
+    {
+        jackctl_server_destroy(server_);
+        throw;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
