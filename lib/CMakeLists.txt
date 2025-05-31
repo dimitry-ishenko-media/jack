@@ -1,4 +1,4 @@
-# Library
+# lib
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(JACK REQUIRED IMPORTED_TARGET jack)
@@ -27,24 +27,65 @@ set(SOURCES
     server.cpp
 )
 
+####################
 include(GNUInstallDirs)
 
-add_library(${PROJECT_NAME} OBJECT ${HEADERS} ${SOURCES})
-set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE 1)
-target_link_libraries(${PROJECT_NAME} PUBLIC PkgConfig::JACK)
+set(name ${PROJECT_NAME})
 
-add_library(${PROJECT_NAME}_shared SHARED $<TARGET_OBJECTS:${PROJECT_NAME}>)
-set_target_properties(${PROJECT_NAME}_shared PROPERTIES
-    OUTPUT_NAME ${PROJECT_NAME}
+add_library(${name}_objects OBJECT ${HEADERS} ${SOURCES})
+set_target_properties(${name}_objects PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_library(${name}_static STATIC $<TARGET_OBJECTS:${name}_objects>)
+set_target_properties(${name}_static PROPERTIES
+    OUTPUT_NAME ${name}
+)
+
+add_library(${name}_shared SHARED $<TARGET_OBJECTS:${name}_objects>)
+set_target_properties(${name}_shared PROPERTIES
+    OUTPUT_NAME ${name}
     VERSION     ${PROJECT_VERSION}
     SOVERSION   ${PROJECT_VERSION_MAJOR}
 )
 
-add_library(${PROJECT_NAME}_static STATIC $<TARGET_OBJECTS:${PROJECT_NAME}>)
-set_target_properties(${PROJECT_NAME}_static PROPERTIES
-    OUTPUT_NAME ${PROJECT_NAME}
+foreach(target ${name}_objects ${name}_static ${name}_shared)
+    target_include_directories(${target} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+    target_link_libraries(${target} PUBLIC PkgConfig::JACK)
+endforeach()
+
+add_library(${name}::${name}_static ALIAS ${name}_static)
+add_library(${name}::${name}_shared ALIAS ${name}_shared)
+add_library(${name}::${name} ALIAS ${name}_shared)
+
+####################
+install(TARGETS ${name}_shared ${name}_static
+    EXPORT ${name}Targets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-install(TARGETS ${PROJECT_NAME}_shared ${PROJECT_NAME}_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${name})
 install(FILES ${OVERALL_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT ${name}Targets
+    FILE ${name}Targets.cmake
+    NAMESPACE ${name}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(${name}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${name}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${name}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${name}Config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+)
