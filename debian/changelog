@@ -1,5 +1,34 @@
-jack++ (0.1) UNRELEASED; urgency=medium
+jack++ (0.1) unstable; urgency=medium
 
-  * Initial release.
+  * Auto-build Debian packages
+  * Fix .gitignore
+  * Add packaging for Debian
+  * Add skeleton for README
+  * Add sidetone example
+  * Add server example
+  * jack::client: manipulate ports
+  * Update CMakeLists from template
+  * Restructure project
+  * Add jack::input_port and jack::output_port
+  * jack::driver: refactor
+  * Add jack::port
+  * jack::client: refactor
+  * jack::server: refactor
+  * jack::param: refactor
+  * jack::driver: add name()
+  * jack::driver: rework access
+  * jack::server: formatting
+  * Add bits for jack::client
+  * jack::server: add wait_for_signal()
+  * jack::server: simplify
+  * jack::server: don't leak
+  * Add jack::driver
+  * jack::param: copy terminating 0
+  * Refactor
+  * Add bits for jack::server
+  * Add jack::param
+  * Add jack::error
+  * Import project skeleton
+  * Initial commit
 
- -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sat, 31 May 2025 21:58:21 -0400
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sat, 31 May 2025 22:50:33 -0400
