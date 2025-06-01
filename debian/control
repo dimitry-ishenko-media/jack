@@ -1,0 +1,31 @@
+Source: jack++
+Section: sound
+Priority: optional
+Maintainer: Dimitry Ishenko <dimitry.ishenko@gmail.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 12),
+ cmake,
+ libjack-jackd2-dev,
+Standards-Version: 4.6.2
+Homepage: https://github.com/dimitry-ishenko-sound/JACK
+Vcs-Browser: https://github.com/dimitry-ishenko-sound/JACK
+Vcs-Git: https://github.com/dimitry-ishenko-sound/JACK
+
+Package: libjack++
+Section: libs
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: JACK++ – C++ wrapper for JACK
+ This package contains the shared library.
+ 
+Package: libjack++-dev
+Section: libdevel
+Architecture: any
+Depends:
+ ${misc:Depends},
+ libjack++ (= ${binary:Version})
+Description: JACK++ – C++ wrapper for JACK
+ This package contains development files.

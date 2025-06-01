@@ -1,0 +1,5 @@
+usr/include/jack++/
+usr/include/jack++.hpp
+usr/lib/*/cmake/jack++/
+usr/lib/*/libjack++.a
+usr/lib/*/libjack++.so
