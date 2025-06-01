@@ -35,7 +35,7 @@ auto jack_port_unregister_helper(jack_client* client)
 port::port(jack_client* client, const std::string& name, jack::dir dir) :
     port_{ jack_port_register_helper(client, name, dir), jack_port_unregister_helper(client) }
 {
-    if (!port_) throw jack::error{EACCES, "jack_port_register()"};
+    if (!port_) throw jack::error{EINVAL, "jack_port_register()"};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

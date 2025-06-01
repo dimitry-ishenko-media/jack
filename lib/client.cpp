@@ -39,7 +39,7 @@ auto jack_client_open_helper(const std::string& name, const client_options& opti
 client::client(const std::string& name, const client_options& options) :
     client_{ jack_client_open_helper(name, options), &jack_client_close }
 {
-    if (!client_) throw jack::error{EACCES, "jack_client_open()"};
+    if (!client_) throw jack::error{EINVAL, "jack_client_open()"};
 
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
     if (ev) throw jack::error{ev, "jack_set_process_callback()"};
@@ -111,7 +111,7 @@ names client::find_ports(const std::string& pattern, bool physical, jack::dir di
     {
         case in : flags |= JackPortIsInput; break;
         case out: flags |= JackPortIsOutput; break;
-        // if dir contains any other value, both in and out ports will be returned
+        // if any other value, both in and out ports will be returned
     }
 
     jack::names names;
