@@ -1,3 +1,9 @@
+jack++ (0.1.1) unstable; urgency=medium
+
+  * Add missing dependency
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sat, 31 May 2025 23:20:58 -0400
+
 jack++ (0.1) unstable; urgency=medium
 
   * Auto-build Debian packages
