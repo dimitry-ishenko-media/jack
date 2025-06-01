@@ -25,12 +25,6 @@ try
         std::copy(in.begin(), in.end(), out.begin());
     });
 
-    auto&& capture = client.input("capture");
-    for (auto&& output : client.find_ports({}, jack::physical, jack::out)) client.connect(output, capture);
-
-    auto&& playback = client.output("playback");
-    for (auto&& input : client.find_ports({}, jack::physical, jack::in)) client.connect(playback, input);
-
     cout << endl;
     cout << "SYSTEM PORTS" << endl;
     for (auto&& name : client.find_ports({}, jack::physical, jack::in | jack::out)) cout << "  " << name << endl;
@@ -39,6 +33,22 @@ try
     cout << "CLIENT PORTS" << endl;
     for (auto&& input : client.inputs()) cout << "  " << input.name() << endl;
     for (auto&& output : client.outputs()) cout << "  " << output.name() << endl;
+    cout << endl;
+
+    cout << "Connecting ports:" << endl;
+    auto&& capture = client.input("capture");
+    for (auto&& output : client.find_ports({}, jack::physical, jack::out))
+    {
+        cout << output << " => " << capture.name() << endl;
+        client.connect(output, capture);
+    }
+
+    auto&& playback = client.output("playback");
+    for (auto&& input : client.find_ports({}, jack::physical, jack::in))
+    {
+        cout << playback.name() << " => " << input << endl;
+        client.connect(playback, input);
+    }
     cout << endl;
 
     std::signal(SIGINT, [](int signal) {
