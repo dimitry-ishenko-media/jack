@@ -9,6 +9,7 @@
 #include "jack++/error.hpp"
 
 #include <jack/jack.h>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace jack
@@ -43,6 +44,9 @@ client::client(const std::string& name, const client_options& options) :
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
     if (ev) throw jack::error{ev, "jack_set_process_callback()"};
 
+    for (auto&& name : options.inputs) inputs_.emplace_back(&*client_, name);
+    for (auto&& name : options.outputs) outputs_.emplace_back(&*client_, name);
+
     ev = jack_activate(&*client_);
     if (ev) throw jack::error{ev, "jack_activate()"};
 }
@@ -53,6 +57,10 @@ client::~client()
     if (client_)
     {
         jack_deactivate(&*client_);
+
+        inputs_.clear();
+        outputs_.clear();
+
         client_.reset();
     }
 }
@@ -73,10 +81,53 @@ void client::on_data(process_callback callback)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const input_port& client::input(const std::string& end) const
+{
+    auto port_name = name() + ':' + end;
+    for (auto&& port : inputs_) if (port.name() == port_name) return port;
+    throw jack::error{EINVAL, port_name};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const output_port& client::output(const std::string& end) const
+{
+    auto port_name = name() + ':' + end;
+    for (auto&& port : outputs_) if (port.name() == port_name) return port;
+    throw jack::error{EINVAL, port_name};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void client::connect(const std::string& from, const std::string& to)
+{
+    auto ev = jack_connect(&*client_, from.data(), to.data());
+    if (ev) throw jack::error{ev, "jack_connect()"};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+names client::find_ports(const std::string& pattern, bool physical, jack::dir dir) const
+{
+    int flags = physical ? JackPortIsPhysical : 0;
+    switch (dir)
+    {
+        case in : flags |= JackPortIsInput; break;
+        case out: flags |= JackPortIsOutput; break;
+        // if dir contains any other value, both in and out ports will be returned
+    }
+
+    jack::names names;
+    std::unique_ptr<const char*, void(*)(void*)> ports{
+        jack_get_ports(&*client_, pattern.data(), JACK_DEFAULT_AUDIO_TYPE, flags), &jack_free
+    };
+    if (ports) for (auto port = &*ports; *port; ++port) names.emplace_back(*port);
+    return names;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int client::dispatch_process_callback(unsigned size, void* ctx)
 {
-    if (auto cl = reinterpret_cast<client*>(ctx))
-        if (auto callback = cl->callback_.load()) (*callback)(size);
+    if (auto instance = reinterpret_cast<client*>(ctx))
+        if (auto callback = instance->callback_.load())
+            (*callback)(instance->inputs(), instance->outputs(), size);
     return 0;
 }
 
