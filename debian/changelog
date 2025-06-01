@@ -1,3 +1,10 @@
+jack++ (0.2) unstable; urgency=medium
+
+  * Use EINVAL for unspecified errors from JACK
+  * example/sidetone: show connections
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sun, 01 Jun 2025 10:45:19 -0400
+
 jack++ (0.1.1) unstable; urgency=medium
 
   * Add missing dependency
