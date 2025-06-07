@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "types.hpp"
 
+#include <audio++.hpp>
 #include <cstddef>
 #include <functional>
 #include <memory>
@@ -35,7 +36,7 @@ public:
     std::string name() const;
     bool is_physical() const;
 
-    jack::buffer buffer(std::size_t) const;
+    audio::span buffer(std::size_t) const;
 
 protected:
     ////////////////////

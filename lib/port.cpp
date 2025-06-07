@@ -42,9 +42,9 @@ port::port(jack_client* client, const std::string& name, jack::dir dir) :
 std::string port::name() const { return jack_port_name(&*port_); }
 bool port::is_physical() const { return jack_port_flags(&*port_) & JackPortIsPhysical; }
 
-jack::buffer port::buffer(std::size_t size) const
+audio::span port::buffer(std::size_t size) const
 {
-    auto buffer = static_cast<sample*>(jack_port_get_buffer(&*port_, size));
+    auto buffer = static_cast<float*>(jack_port_get_buffer(&*port_, size));
     return { buffer, size };
 }
 

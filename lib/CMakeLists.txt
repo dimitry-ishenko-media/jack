@@ -10,6 +10,8 @@ pkg_search_module(JACK REQUIRED IMPORTED_TARGET jack)
 pkg_get_variable(JACK_SERVER_LINK_LIBRARIES jack server_libs)
 target_link_libraries(PkgConfig::JACK INTERFACE ${JACK_SERVER_LINK_LIBRARIES})
 
+find_package(audio++ REQUIRED)
+
 set(HEADERS
     jack++/client.hpp
     jack++/driver.hpp
@@ -30,7 +32,7 @@ set(SOURCES
     server.cpp
 )
 
-set(DEPENDS PkgConfig::JACK)
+set(DEPENDS audio++::audio++ PkgConfig::JACK)
 
 ####################
 set(name ${PROJECT_NAME})
