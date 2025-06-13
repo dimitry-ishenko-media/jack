@@ -31,7 +31,7 @@ void driver::setup(jackctl_server* server, jackctl_driver** driver)
             return;
         }
     }
-    throw jack::error{EINVAL, name_};
+    throw jack::error{invalid_driver, name_};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

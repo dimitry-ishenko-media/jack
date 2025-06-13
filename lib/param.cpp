@@ -36,11 +36,11 @@ void param::set(const jack::value& val)
             break;
         }
         case JackParamBool: value.b = std::get<bool>(val); break;
-        default: throw jack::error{EINVAL, "jackctl_parameter_get_type()"};
+        default: throw jack::error{invalid_value_type, "jackctl_parameter_get_type()"};
     }
 
     auto success = jackctl_parameter_set_value(param_, &value);
-    if (!success) throw jack::error{EINVAL, "jackctl_parameter_set_value()"}; 
+    if (!success) throw jack::error{value_set_error, "jackctl_parameter_set_value()"}; 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,12 +51,12 @@ jack::value param::get() const
 
     switch (type)
     {
-        case JackParamInt: return value.i;
-        case JackParamUInt: return value.ui;
-        case JackParamChar: return value.c;
+        case JackParamInt:    return value.i;
+        case JackParamUInt:   return value.ui;
+        case JackParamChar:   return value.c;
         case JackParamString: return value.str;
-        case JackParamBool: return value.b;
-        default: throw jack::error{EINVAL, "jackctl_parameter_get_type()"};
+        case JackParamBool:   return value.b;
+        default: throw jack::error{invalid_value_type, "jackctl_parameter_get_type()"};
     }
 }
 
@@ -80,13 +80,13 @@ params extract_from(const jack_list* node)
 param& find(jack::params& params, const std::string& name)
 {
     auto it = params.find(name);
-    return it != params.end() ? it->second : throw jack::error{EINVAL, name};
+    return it != params.end() ? it->second : throw jack::error{invalid_param, name};
 }
 
 const param& find(const jack::params& params, const std::string& name)
 {
     auto it = params.find(name);
-    return it != params.end() ? it->second : throw jack::error{EINVAL, name};
+    return it != params.end() ? it->second : throw jack::error{invalid_param, name};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

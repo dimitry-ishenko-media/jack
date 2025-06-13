@@ -18,7 +18,7 @@ namespace jack
 server::server(const std::string& name, jack::driver&& driver, const server_options& options) :
     server_{ jackctl_server_create(nullptr, nullptr), &jackctl_server_destroy }
 {
-    if (!server_) throw jack::error{EINVAL, "jackctl_server_create()"};
+    if (!server_) throw jack::error{server_startup_error, "jackctl_server_create()"};
 
     params_ = extract_from(jackctl_server_get_parameters(&*server_));
 
@@ -30,10 +30,10 @@ server::server(const std::string& name, jack::driver&& driver, const server_opti
     driver.setup(&*server_, &driver_);
 
     auto success = jackctl_server_open(&*server_, driver_);
-    if (!success) throw jack::error{EINVAL, "jackctl_server_open()"};
+    if (!success) throw jack::error{server_startup_error, "jackctl_server_open()"};
 
     success = jackctl_server_start(&*server_);
-    if (!success) throw jack::error{EINVAL, "jackctl_server_start()"};
+    if (!success) throw jack::error{server_startup_error, "jackctl_server_start()"};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -39,16 +39,16 @@ auto jack_client_open_helper(const std::string& name, const client_options& opti
 client::client(const std::string& name, const client_options& options) :
     client_{ jack_client_open_helper(name, options), &jack_client_close }
 {
-    if (!client_) throw jack::error{EINVAL, "jack_client_open()"};
+    if (!client_) throw jack::error{client_create_error, "jack_client_open()"};
 
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
-    if (ev) throw jack::error{ev, "jack_set_process_callback()"};
+    if (ev) throw jack::error{client_create_error, "jack_set_process_callback()"};
 
     for (auto&& name : options.inputs) inputs_.emplace_back(&*client_, name);
     for (auto&& name : options.outputs) outputs_.emplace_back(&*client_, name);
 
     ev = jack_activate(&*client_);
-    if (ev) throw jack::error{ev, "jack_activate()"};
+    if (ev) throw jack::error{client_create_error, "jack_activate()"};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ const input_port& client::input(const std::string& end) const
 {
     auto port_name = name() + ':' + end;
     for (auto&& port : inputs_) if (port.name() == port_name) return port;
-    throw jack::error{EINVAL, port_name};
+    throw jack::error{invalid_port, port_name};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,14 +93,16 @@ const output_port& client::output(const std::string& end) const
 {
     auto port_name = name() + ':' + end;
     for (auto&& port : outputs_) if (port.name() == port_name) return port;
-    throw jack::error{EINVAL, port_name};
+    throw jack::error{invalid_port, port_name};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void client::connect(const std::string& from, const std::string& to)
 {
     auto ev = jack_connect(&*client_, from.data(), to.data());
-    if (ev) throw jack::error{ev, "jack_connect()"};
+    if (ev) throw jack::error{
+        ev == EEXIST ? connection_exists : connection_failed, "jack_connect()"
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
