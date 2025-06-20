@@ -36,15 +36,18 @@ public:
     std::string name() const;
     bool is_physical() const;
 
+    constexpr auto&& format() const noexcept { return fmt_; }
+
     audio::span buffer(std::size_t) const;
 
 protected:
     ////////////////////
-    port(jack_client*, const std::string& name, jack::dir);
+    port(jack_client*, const std::string& name, audio::format, jack::dir);
 
 private:
     ////////////////////
     std::unique_ptr<jack_port, std::function<void(jack_port*)>> port_;
+    audio::format fmt_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,14 +55,18 @@ class input_port : public port
 {
 public:
     ////////////////////
-    input_port(jack_client* client, const std::string& name) : port{client, name, jack::in} { }
+    input_port(jack_client* client, const std::string& name, audio::format fmt) :
+        port{client, name, fmt, jack::in}
+    { }
 };
 
 class output_port : public port
 {
 public:
     ////////////////////
-    output_port(jack_client* client, const std::string& name) : port{client, name, jack::out} { }
+    output_port(jack_client* client, const std::string& name, audio::format fmt) :
+        port{client, name, fmt, jack::out}
+    { }
 };
 
 using input_ports = std::vector<input_port>;

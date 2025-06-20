@@ -6,7 +6,7 @@ Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 12),
  cmake,
- libaudio++-dev,
+ libaudio++-dev (>= 0.5),
  libjack-jackd2-dev,
  pkgconf,
 Standards-Version: 4.6.2
@@ -28,7 +28,7 @@ Section: libdevel
 Architecture: any
 Depends:
  ${misc:Depends},
- libaudio++-dev,
+ libaudio++-dev (>= 0.5),
  libjack++ (= ${binary:Version})
 Description: JACK++ – C++ wrapper for JACK
  This package contains development files.

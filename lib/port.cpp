@@ -32,8 +32,9 @@ auto jack_port_unregister_helper(jack_client* client)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-port::port(jack_client* client, const std::string& name, jack::dir dir) :
-    port_{ jack_port_register_helper(client, name, dir), jack_port_unregister_helper(client) }
+port::port(jack_client* client, const std::string& name, audio::format fmt, jack::dir dir) :
+    port_{ jack_port_register_helper(client, name, dir), jack_port_unregister_helper(client) },
+    fmt_{fmt}
 {
     if (!port_) throw jack::error{port_register_error, "jack_port_register()"};
 }
@@ -45,7 +46,7 @@ bool port::is_physical() const { return jack_port_flags(&*port_) & JackPortIsPhy
 audio::span port::buffer(std::size_t size) const
 {
     auto buffer = static_cast<float*>(jack_port_get_buffer(&*port_, size));
-    return { buffer, size };
+    return audio::span{fmt_, buffer, size};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

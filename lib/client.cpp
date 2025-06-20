@@ -44,8 +44,13 @@ client::client(const std::string& name, const client_options& options) :
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
     if (ev) throw jack::error{client_create_error, "jack_set_process_callback()"};
 
-    for (auto&& name : options.inputs) inputs_.emplace_back(&*client_, name);
-    for (auto&& name : options.outputs) outputs_.emplace_back(&*client_, name);
+    audio::format fmt{
+        .chans = audio::mono,
+        .rate = static_cast<audio::rate>(jack_get_sample_rate(&*client_)),
+        .type = audio::f32
+    };
+    for (auto&& name : options.inputs) inputs_.emplace_back(&*client_, name, fmt);
+    for (auto&& name : options.outputs) outputs_.emplace_back(&*client_, name, fmt);
 
     ev = jack_activate(&*client_);
     if (ev) throw jack::error{client_create_error, "jack_activate()"};
