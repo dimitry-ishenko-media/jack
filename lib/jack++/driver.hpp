@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "param.hpp"
 
+#include <audio++.hpp>
 #include <map>
 #include <optional>
 #include <string>
@@ -53,9 +54,9 @@ private:
 struct alsa_options
 {
     std::optional<std::string> device;
-    std::optional<unsigned> chan_in;
-    std::optional<unsigned> chan_out;
-    std::optional<unsigned> rate;
+    std::optional<audio::chans> chan_in;
+    std::optional<audio::chans> chan_out;
+    std::optional<audio::rate> rate;
     std::optional<unsigned> period;
     std::optional<unsigned> periods;
 };
@@ -67,9 +68,9 @@ public:
     explicit alsa_driver(const alsa_options& = { });
 
     std::string device() const;
-    unsigned chan_in() const;
-    unsigned chan_out() const;
-    unsigned rate() const;
+    audio::chans chan_in() const;
+    audio::chans chan_out() const;
+    audio::rate rate() const;
     unsigned period() const;
     unsigned periods() const;
 };

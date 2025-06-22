@@ -47,9 +47,9 @@ alsa_driver::alsa_driver(const alsa_options& options) : driver{"alsa"}
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string alsa_driver::device() const { return find(params_, "device").get_as<std::string>(); }
-unsigned alsa_driver::chan_in() const { return find(params_, "inchannels").get_as<unsigned>(); }
-unsigned alsa_driver::chan_out() const { return find(params_, "outchannels").get_as<unsigned>(); }
-unsigned alsa_driver::rate() const { return find(params_, "rate").get_as<unsigned>(); }
+audio::chans alsa_driver::chan_in() const { return static_cast<audio::chans>(find(params_, "inchannels").get_as<unsigned>()); }
+audio::chans alsa_driver::chan_out() const { return static_cast<audio::chans>(find(params_, "outchannels").get_as<unsigned>()); }
+audio::rate alsa_driver::rate() const { return static_cast<audio::rate>(find(params_, "rate").get_as<unsigned>()); }
 unsigned alsa_driver::period() const { return find(params_, "period").get_as<unsigned>(); }
 unsigned alsa_driver::periods() const { return find(params_, "nperiods").get_as<unsigned>(); }
 

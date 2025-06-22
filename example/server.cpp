@@ -1,13 +1,15 @@
+#include <audio++.hpp>
 #include <iostream>
 #include <jack++.hpp>
 
+using namespace audio::literals;
 using namespace std;
 
 int main(int argc, char* argv[])
 try
 {
     jack::alsa_options options{
-        .rate = 44100,
+        .rate = 44100_hz,
         .period = 128,
         .periods = 2
     };
