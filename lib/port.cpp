@@ -45,10 +45,9 @@ bool port::is_physical() const { return jack_port_flags(&*port_) & JackPortIsPhy
 
 audio::span port::buffer(std::size_t size) const
 {
-    auto buffer = static_cast<float*>(jack_port_get_buffer(&*port_, size));
+    auto buffer = jack_port_get_buffer(&*port_, size);
     return audio::span{fmt_, buffer, size};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 }
-
