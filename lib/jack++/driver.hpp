@@ -9,7 +9,7 @@
 #define JACK_DRIVER_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "param.hpp"
+#include "jack++/param.hpp"
 
 #include <audio++.hpp>
 #include <map>
@@ -40,13 +40,11 @@ protected:
     ////////////////////
     std::string name_;
     std::map<std::string, value> options_;
-    params params_;
 
     explicit driver(std::string name) : name_{std::move(name)} { }
 
-private:
-    ////////////////////
-    void setup(jackctl_server*, jackctl_driver**);
+    void set_params(jackctl_server*, jackctl_driver**);
+    virtual void get_params(jackctl_server*, jackctl_driver*) = 0;
     friend class server;
 };
 
@@ -67,12 +65,23 @@ public:
     ////////////////////
     explicit alsa_driver(const alsa_options& = { });
 
-    std::string device() const;
-    audio::chans chan_in() const;
-    audio::chans chan_out() const;
-    audio::rate rate() const;
-    unsigned period() const;
-    unsigned periods() const;
+    auto&& device() const noexcept { return device_; }
+    auto&& chan_in() const noexcept { return chan_in_; }
+    auto&& chan_out() const noexcept { return chan_out_; }
+    auto&& rate() const noexcept { return rate_; }
+    auto&& period() const noexcept { return period_; }
+    auto&& periods() const noexcept { return periods_; }
+
+private:
+    ////////////////////
+    void get_params(jackctl_server*, jackctl_driver*) override;
+
+    std::string device_;
+    audio::chans chan_in_;
+    audio::chans chan_out_;
+    audio::rate rate_;
+    unsigned period_;
+    unsigned periods_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

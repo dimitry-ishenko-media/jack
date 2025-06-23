@@ -40,7 +40,7 @@ void param::set(const jack::value& val)
     }
 
     auto success = jackctl_parameter_set_value(param_, &value);
-    if (!success) throw jack::error{value_set_error, "jackctl_parameter_set_value()"}; 
+    if (!success) throw jack::error{value_set_error, "jackctl_parameter_set_value()"};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,32 +61,16 @@ jack::value param::get() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-params extract_from(const jack_list* node)
+param param::from_list(const jack_list* node, const std::string& name)
 {
-    jack::params params;
-
     for (; node; node = node->next)
     {
-        auto param = static_cast<jackctl_parameter*>(node->data);
-        std::string name = jackctl_parameter_get_name(param);
-
-        params.emplace(std::move(name), param);
+        auto p = static_cast<jackctl_parameter*>(node->data);
+        auto n = jackctl_parameter_get_name(p);
+        if (n == name) return param{p};
     }
 
-    return params;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-param& find(jack::params& params, const std::string& name)
-{
-    auto it = params.find(name);
-    return it != params.end() ? it->second : throw jack::error{invalid_param, name};
-}
-
-const param& find(const jack::params& params, const std::string& name)
-{
-    auto it = params.find(name);
-    return it != params.end() ? it->second : throw jack::error{invalid_param, name};
+    throw jack::error{invalid_param, name};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

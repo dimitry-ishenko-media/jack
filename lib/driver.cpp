@@ -15,18 +15,18 @@ namespace jack
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-void driver::setup(jackctl_server* server, jackctl_driver** driver)
+void driver::set_params(jackctl_server* server, jackctl_driver** driver)
 {
     for (auto node = jackctl_server_get_drivers_list(server); node; node = node->next)
     {
         *driver = static_cast<jackctl_driver*>(node->data);
         if (name_ == jackctl_driver_get_name(*driver))
         {
-            params_ = extract_from(jackctl_driver_get_parameters(*driver));
+            auto params = jackctl_driver_get_parameters(*driver);
             while (options_.size())
             {
                 auto node = options_.extract(options_.begin());
-                find(params_, node.key()).set(node.mapped());
+                param::from_list(params, node.key()).set(node.mapped());
             }
             return;
         }
@@ -46,12 +46,16 @@ alsa_driver::alsa_driver(const alsa_options& options) : driver{"alsa"}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string alsa_driver::device() const { return find(params_, "device").get_as<std::string>(); }
-audio::chans alsa_driver::chan_in() const { return static_cast<audio::chans>(find(params_, "inchannels").get_as<unsigned>()); }
-audio::chans alsa_driver::chan_out() const { return static_cast<audio::chans>(find(params_, "outchannels").get_as<unsigned>()); }
-audio::rate alsa_driver::rate() const { return static_cast<audio::rate>(find(params_, "rate").get_as<unsigned>()); }
-unsigned alsa_driver::period() const { return find(params_, "period").get_as<unsigned>(); }
-unsigned alsa_driver::periods() const { return find(params_, "nperiods").get_as<unsigned>(); }
+void alsa_driver::get_params(jackctl_server* server, jackctl_driver* driver)
+{
+    auto params = jackctl_driver_get_parameters(driver);
+    device_  = param::from_list(params, "device").get_as<std::string>();
+    chan_in_ = static_cast<audio::chans>(param::from_list(params, "inchannels").get_as<unsigned>());
+    chan_out_= static_cast<audio::chans>(param::from_list(params, "outchannels").get_as<unsigned>());
+    rate_    = static_cast<audio::rate >(param::from_list(params, "rate").get_as<unsigned>());
+    period_  = param::from_list(params, "period").get_as<unsigned>();
+    periods_ = param::from_list(params, "nperiods").get_as<unsigned>();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 }

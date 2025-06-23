@@ -9,8 +9,7 @@
 #define JACK_SERVER_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "driver.hpp"
-#include "param.hpp"
+#include "jack++/driver.hpp"
 
 #include <memory>
 #include <optional>
@@ -40,16 +39,19 @@ public:
     ~server();
 
     ////////////////////
-    std::string name() const;
-    bool realtime() const;
-    std::optional<int> priority() const;
+    auto&& name() const noexcept { return name_; }
+    auto&& realtime() const noexcept { return realtime_; }
+    auto&& priority() const noexcept { return priority_; }
 
     void wait_for_signal();
 
 private:
     ////////////////////
     std::unique_ptr<jackctl_server, void(*)(jackctl_server*)> server_;
-    params params_;
+
+    std::string name_;
+    bool realtime_;
+    std::optional<int> priority_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

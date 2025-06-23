@@ -9,7 +9,6 @@
 #define JACK_PARAM_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <map>
 #include <string>
 #include <variant>
 
@@ -35,7 +34,7 @@ class param
 {
 public:
     ////////////////////
-    explicit param(jackctl_parameter*);
+    param() = default;
 
     void set(const jack::value&);
     jack::value get() const;
@@ -43,18 +42,13 @@ public:
     template<typename T>
     auto get_as() const { return std::get<T>(get()); }
 
+    static param from_list(const jack_list*, const std::string& name);
+
 private:
     ////////////////////
     jackctl_parameter* param_;
+    explicit param(jackctl_parameter*);
 };
-
-////////////////////////////////////////////////////////////////////////////////
-using params = std::map<std::string, param>;
-
-params extract_from(const jack_list*);
-
-param& find(params&, const std::string& name);
-const param& find(const params&, const std::string& name);
 
 ////////////////////////////////////////////////////////////////////////////////
 }
