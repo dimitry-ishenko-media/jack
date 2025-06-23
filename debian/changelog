@@ -1,3 +1,10 @@
+jack++ (0.7) unstable; urgency=medium
+
+  * Simplify audio::param
+  * Update audio++ dependency
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Mon, 23 Jun 2025 16:54:45 -0400
+
 jack++ (0.6) unstable; urgency=medium
 
   * jack::port use audio types
