@@ -9,7 +9,7 @@
 #define JACK_CLIENT_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "port.hpp"
+#include "jack++/port.hpp"
 
 #include <atomic>
 #include <cstddef>

@@ -9,7 +9,7 @@
 #define JACK_PORT_HPP
 
 ////////////////////////////////////////////////////////////////////////////////
-#include "types.hpp"
+#include "jack++/types.hpp"
 
 #include <audio++.hpp>
 #include <cstddef>
