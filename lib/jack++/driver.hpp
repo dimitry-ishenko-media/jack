@@ -10,8 +10,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #include "jack++/param.hpp"
+#include "jack++/types.hpp"
 
-#include <audio++.hpp>
 #include <map>
 #include <optional>
 #include <string>
@@ -29,12 +29,12 @@ class driver
 public:
     ////////////////////
     driver(const driver&) = delete;
-    driver(driver&&) = default;
-
     driver& operator=(const driver&) = delete;
+
+    driver(driver&&) = default;
     driver& operator=(driver&&) = default;
 
-    auto&& name() const { return name_; }
+    constexpr auto& name() const noexcept { return name_; }
 
 protected:
     ////////////////////
@@ -52,9 +52,9 @@ protected:
 struct alsa_options
 {
     std::optional<std::string> device;
-    std::optional<audio::chans> chan_in;
-    std::optional<audio::chans> chan_out;
-    std::optional<audio::rate> rate;
+    std::optional<jack::chans> chan_in;
+    std::optional<jack::chans> chan_out;
+    std::optional<jack::rate> rate;
     std::optional<unsigned> period;
     std::optional<unsigned> periods;
 };
@@ -65,21 +65,21 @@ public:
     ////////////////////
     explicit alsa_driver(const alsa_options& = { });
 
-    auto&& device() const noexcept { return device_; }
-    auto&& chan_in() const noexcept { return chan_in_; }
-    auto&& chan_out() const noexcept { return chan_out_; }
-    auto&& rate() const noexcept { return rate_; }
-    auto&& period() const noexcept { return period_; }
-    auto&& periods() const noexcept { return periods_; }
+    constexpr auto& device() const noexcept { return device_; }
+    constexpr auto& chan_in() const noexcept { return chan_in_; }
+    constexpr auto& chan_out() const noexcept { return chan_out_; }
+    constexpr auto& rate() const noexcept { return rate_; }
+    constexpr auto& period() const noexcept { return period_; }
+    constexpr auto& periods() const noexcept { return periods_; }
 
 private:
     ////////////////////
     void get_params(jackctl_server*, jackctl_driver*) override;
 
     std::string device_;
-    audio::chans chan_in_;
-    audio::chans chan_out_;
-    audio::rate rate_;
+    jack::chans chan_in_;
+    jack::chans chan_out_;
+    jack::rate rate_;
     unsigned period_;
     unsigned periods_;
 };

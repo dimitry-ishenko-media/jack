@@ -44,16 +44,19 @@ public:
     explicit client(const std::string& name, const client_options& = { });
     ~client();
 
+    // NB: Instances of this class cannot be movable, as their addresses
+    // are passed to the JACK server and are used in the callback dispatch.
+
     ////////////////////
     std::string name() const;
     void on_data(process_callback);
 
     ////////////////////
-    auto&& inputs() const { return inputs_; }
+    constexpr auto& inputs() const noexcept { return inputs_; }
     const input_port& input(const std::string& name) const;
 
-    auto&& outputs() const { return outputs_; }
     const output_port& output(const std::string& name) const;
+    constexpr auto& outputs() const noexcept { return outputs_; }
 
     names find_ports(const std::optional<std::string>& pattern, jack::dir dir) const
     {

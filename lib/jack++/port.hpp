@@ -11,11 +11,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "jack++/types.hpp"
 
-#include <audio++.hpp>
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
 struct _jack_client;
@@ -38,16 +39,16 @@ public:
 
     constexpr auto&& format() const noexcept { return fmt_; }
 
-    audio::span buffer(std::size_t) const;
-
 protected:
     ////////////////////
-    port(jack_client*, const std::string& name, audio::format, jack::dir);
+    port(jack_client*, std::string_view name, jack::format, jack::dir);
+
+    std::span<sample> buffer(std::size_t) const;
 
 private:
     ////////////////////
     std::unique_ptr<jack_port, std::function<void(jack_port*)>> port_;
-    audio::format fmt_;
+    jack::format fmt_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,18 +56,22 @@ class input_port : public port
 {
 public:
     ////////////////////
-    input_port(jack_client* client, const std::string& name, audio::format fmt) :
+    input_port(jack_client* client, std::string_view name, jack::format fmt) :
         port{client, name, fmt, jack::in}
     { }
+
+    auto recv(std::size_t size) const { return buffer(size); }
 };
 
 class output_port : public port
 {
 public:
     ////////////////////
-    output_port(jack_client* client, const std::string& name, audio::format fmt) :
+    output_port(jack_client* client, std::string_view name, jack::format fmt) :
         port{client, name, fmt, jack::out}
     { }
+
+    auto request(std::size_t size) const { return buffer(size); }
 };
 
 using input_ports = std::vector<input_port>;

@@ -39,9 +39,9 @@ public:
     ~server();
 
     ////////////////////
-    auto&& name() const noexcept { return name_; }
-    auto&& realtime() const noexcept { return realtime_; }
-    auto&& priority() const noexcept { return priority_; }
+    constexpr auto& name() const noexcept { return name_; }
+    constexpr auto& realtime() const noexcept { return realtime_; }
+    constexpr auto& priority() const noexcept { return priority_; }
 
     void wait_for_signal();
 

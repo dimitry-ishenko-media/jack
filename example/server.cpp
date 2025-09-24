@@ -1,17 +1,17 @@
-#include <audio++.hpp>
 #include <iostream>
 #include <jack++.hpp>
 
-using namespace audio::literals;
+using namespace jack::literals;
 using namespace std;
 
 int main(int argc, char* argv[])
 try
 {
     jack::alsa_options options{
+        .device = "hw:1",
         .rate = 44100_hz,
         .period = 128,
-        .periods = 2
+        .periods = 3,
     };
     if (argc > 1) options.device = argv[1];
 

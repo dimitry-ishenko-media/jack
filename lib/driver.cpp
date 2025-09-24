@@ -50,9 +50,9 @@ void alsa_driver::get_params(jackctl_server* server, jackctl_driver* driver)
 {
     auto params = jackctl_driver_get_parameters(driver);
     device_  = param::from_list(params, "device").get_as<std::string>();
-    chan_in_ = static_cast<audio::chans>(param::from_list(params, "inchannels").get_as<unsigned>());
-    chan_out_= static_cast<audio::chans>(param::from_list(params, "outchannels").get_as<unsigned>());
-    rate_    = static_cast<audio::rate >(param::from_list(params, "rate").get_as<unsigned>());
+    chan_in_ = static_cast<jack::chans>(param::from_list(params, "inchannels").get_as<unsigned>());
+    chan_out_= static_cast<jack::chans>(param::from_list(params, "outchannels").get_as<unsigned>());
+    rate_    = static_cast<jack::rate >(param::from_list(params, "rate").get_as<unsigned>());
     period_  = param::from_list(params, "period").get_as<unsigned>();
     periods_ = param::from_list(params, "nperiods").get_as<unsigned>();
 }

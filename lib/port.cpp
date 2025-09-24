@@ -18,7 +18,7 @@ namespace jack
 namespace
 {
 
-auto jack_port_register_helper(jack_client* client, const std::string& name, jack::dir dir)
+auto jack_port_register_helper(jack_client* client, std::string_view name, jack::dir dir)
 {
     int flags = (dir == jack::in) ? JackPortIsInput : JackPortIsOutput;
     return jack_port_register(client, name.data(), JACK_DEFAULT_AUDIO_TYPE, flags, 0);
@@ -32,8 +32,8 @@ auto jack_port_unregister_helper(jack_client* client)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-port::port(jack_client* client, const std::string& name, audio::format fmt, jack::dir dir) :
-    port_{ jack_port_register_helper(client, name, dir), jack_port_unregister_helper(client) },
+port::port(jack_client* client, std::string_view name, jack::format fmt, jack::dir dir) :
+    port_{jack_port_register_helper(client, name, dir), jack_port_unregister_helper(client)},
     fmt_{fmt}
 {
     if (!port_) throw jack::error{port_register_error, "jack_port_register()"};
@@ -43,10 +43,10 @@ port::port(jack_client* client, const std::string& name, audio::format fmt, jack
 std::string port::name() const { return jack_port_name(&*port_); }
 bool port::is_physical() const { return jack_port_flags(&*port_) & JackPortIsPhysical; }
 
-audio::span port::buffer(std::size_t size) const
+std::span<sample> port::buffer(std::size_t size) const
 {
-    auto buffer = jack_port_get_buffer(&*port_, size);
-    return audio::span{fmt_, buffer, size};
+    auto data = jack_port_get_buffer(&*port_, size);
+    return std::span<sample>{reinterpret_cast<sample*>(data), size};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -37,17 +37,17 @@ auto jack_client_open_helper(const std::string& name, const client_options& opti
 
 ////////////////////////////////////////////////////////////////////////////////
 client::client(const std::string& name, const client_options& options) :
-    client_{ jack_client_open_helper(name, options), &jack_client_close }
+    client_{jack_client_open_helper(name, options), &jack_client_close}
 {
     if (!client_) throw jack::error{client_create_error, "jack_client_open()"};
 
     auto ev = jack_set_process_callback(&*client_, &dispatch_process_callback, this);
     if (ev) throw jack::error{client_create_error, "jack_set_process_callback()"};
 
-    audio::format fmt{
-        .chans = audio::mono,
-        .rate = static_cast<audio::rate>(jack_get_sample_rate(&*client_)),
-        .type = audio::f32
+    jack::format fmt{
+        .chans = jack::mono,
+        .rate = static_cast<jack::rate>(jack_get_sample_rate(&*client_)),
+        .type = jack::f32
     };
     for (auto&& name : options.inputs) inputs_.emplace_back(&*client_, name, fmt);
     for (auto&& name : options.outputs) outputs_.emplace_back(&*client_, name, fmt);
@@ -74,7 +74,7 @@ client::~client()
 std::string client::name() const
 {
     if (auto name = jack_get_client_name(&*client_)) return name;
-    return { };
+    return {};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

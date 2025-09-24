@@ -20,8 +20,8 @@ try
 
     client.on_data([&](const jack::input_ports& inputs, const jack::output_ports& outputs, std::size_t size)
     {
-        auto in = inputs[0].buffer(size).as_bytes();
-        auto out = outputs[0].buffer(size).as_bytes();
+        auto in = inputs[0].recv(size);
+        auto out = outputs[0].request(size);
         std::copy(in.begin(), in.end(), out.begin());
     });
 
