@@ -9,9 +9,9 @@ Build-Depends:
  libjack-jackd2-dev,
  pkgconf,
 Standards-Version: 4.6.2
-Homepage: https://github.com/dimitry-ishenko-sound/JACK
-Vcs-Browser: https://github.com/dimitry-ishenko-sound/JACK
-Vcs-Git: https://github.com/dimitry-ishenko-sound/JACK
+Homepage: https://github.com/dimitry-ishenko-media/jack
+Vcs-Browser: https://github.com/dimitry-ishenko-media/jack
+Vcs-Git: https://github.com/dimitry-ishenko-media/jack
 
 Package: libjack++
 Section: libs
