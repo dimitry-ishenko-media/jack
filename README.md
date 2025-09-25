@@ -9,7 +9,7 @@ The **jack++** library is a lightweight C++ wrapper for the [JACK Audio Connecti
 Debian/Ubuntu/etc:
 
 ```shell
-sudo add-apt-repository ppa:ppa-verse/package
+sudo add-apt-repository ppa:ppa-verse/public
 sudo apt install libjack++
 ```
 
@@ -21,7 +21,7 @@ sudo apt install libjack++-dev
 RaspberryPi:
 
 ```shell
-sudo add-apt-repository -S deb https://ppa.launchpadcontent.net/ppa-verse/casparcg/ubuntu jammy main
+sudo add-apt-repository -S deb https://ppa.launchpadcontent.net/ppa-verse/public/ubuntu jammy main
 sudo apt install libjack++
 ```
 
