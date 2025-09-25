@@ -3,16 +3,8 @@ Source: https://github.com/dimitry-ishenko-media/jack
 Upstream-Name: jack++
 Upstream-Contact: Dimitry Ishenko <dimitry.ishenko@gmail.com>
 
-Files:
- *
-Copyright:
- 2025 Dimitry Ishenko <dimitry.ishenko@gmail.com>
-License: GPL-3.0+
-
-Files:
- debian/*
-Copyright:
- 2025 Dimitry Ishenko <dimitry.ishenko@gmail.com>
+Files: *
+Copyright: 2025 Dimitry Ishenko <dimitry.ishenko@gmail.com>
 License: GPL-3.0+
 
 License: GPL-3.0+
