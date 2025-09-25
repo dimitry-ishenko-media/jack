@@ -8,7 +8,6 @@ int main(int argc, char* argv[])
 try
 {
     jack::alsa_options options{
-        .device = "hw:1",
         .rate = 44100_hz,
         .period = 128,
         .periods = 3,
