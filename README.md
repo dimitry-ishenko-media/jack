@@ -35,7 +35,7 @@ sudo apt install libjack++-dev
 Stable version (requires [CMake](https://cmake.org/) >= 3.16):
 
 ```shell
-p=jack v=1.0.1
+p=jack v=1.0.2
 wget https://github.com/dimitry-ishenko-media/${p}/archive/v${v}.tar.gz
 tar xzf v${v}.tar.gz
 mkdir ${p}-${v}/build
