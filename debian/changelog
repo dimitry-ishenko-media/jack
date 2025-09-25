@@ -1,3 +1,10 @@
+jack++ (1.0.2) unstable; urgency=medium
+
+  * Add workflow to build Debian packages
+  * README: fix ppa
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Thu, 25 Sep 2025 10:03:08 -0400
+
 jack++ (1.0.1) unstable; urgency=medium
 
   * example: tweak
