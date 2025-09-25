@@ -1,3 +1,12 @@
+jack++ (1.0.1) unstable; urgency=medium
+
+  * example: tweak
+  * Update README.md
+  * d/rules: be verbose
+  * d/copyright: formatting
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Wed, 24 Sep 2025 20:58:18 -0400
+
 jack++ (1.0) unstable; urgency=medium
 
   * Update README.md
