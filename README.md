@@ -79,6 +79,8 @@ to find the library and link with it. **jack++** additionally exports `jack++::j
 
 _TODO_
 
+For now check the [example](./example/) directory for usage examples.
+
 ## Authors
 
 * **Dimitry Ishenko** - dimitry (dot) ishenko (at) (gee) mail (dot) com
